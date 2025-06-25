@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-hospital"></i>
+                <h1>MediCare Hospital</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-section="patients"><i class="fas fa-procedures"></i> Patients</a></li>
+                    <li><a href="#" data-section="doctors"><i class="fas fa-user-md"></i> Doctors</a></li>
+                    <li><a href="#" data-section="appointments"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                    <li><a href="#" data-section="departments"><i class="fas fa-clinic-medical"></i> Departments</a></li>
+                    <li><a href="#" data-section="reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <img src="https://via.placeholder.com/40" alt="User">
+                <span>Admin</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </header>
+
+        <main>
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2>Dashboard</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #4e73df;">
+                            <i class="fas fa-procedures"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Patients</h3>
+                            <p id="total-patients">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #1cc88a;">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Doctors</h3>
+                            <p id="total-doctors">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #36b9cc;">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Today's Appointments</h3>
+                            <p id="today-appointments">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f6c23e;">
+                            <i class="fas fa-clinic-medical"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Departments</h3>
+                            <p id="total-departments">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3>Monthly Patients</h3>
+                        <canvas id="patients-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Appointments by Department</h3>
+                        <canvas id="department-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Appointments</h3>
+                    <table id="recent-appointments">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Department</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Patients Section -->
+            <section id="patients" class="content-section">
+                <div class="section-header">
+                    <h2>Patients</h2>
+                    <button id="add-patient-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Patient
+                    </button>
+                </div>
+
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="patient-search" placeholder="Search patients...">
+                    </div>
+                    <select id="patient-filter">
+                        <option value="all">All Patients</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <table id="patients-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Add Patient Modal -->
+                <div id="patient-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>Add New Patient</h3>
+                        <form id="patient-form">
+                            <div class="form-group">
+                                <label for="patient-name">Full Name</label>
+                                <input type="text" id="patient-name" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="patient-gender">Gender</label>
+                                    <select id="patient-gender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="patient-age">Age</label>
+                                    <input type="number" id="patient-age" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-phone">Phone Number</label>
+                                <input type="tel" id="patient-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-email">Email</label>
+                                <input type="email" id="patient-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-address">Address</label>
+                                <textarea id="patient-address" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-medical-history">Medical History</label>
+                                <textarea id="patient-medical-history" rows="3" placeholder="Any known allergies or medical conditions"></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Patient</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctors Section -->
+            <section id="doctors" class="content-section">
+                <div class="section-header">
+                    <h2>Doctors</h2>
+                    <button id="add-doctor-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Doctor
+                    </button>
+                </div>
+
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="doctor-search" placeholder="Search doctors...">
+                    </div>
+                    <select id="doctor-filter">
+                        <option value="all">All Doctors</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="orthopedics">Orthopedics</option>
+                        <option value="pediatrics">Pediatrics</option>
+                    </select>
+                </div>
+
+                <table id="doctors-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Schedule</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Add Doctor Modal -->
+                <div id="doctor-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>Add New Doctor</h3>
+                        <form id="doctor-form">
+                            <div class="form-group">
+                                <label for="doctor-name">Full Name</label>
+                                <input type="text" id="doctor-name" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="doctor-specialization">Specialization</label>
+                                    <select id="doctor-specialization" required>
+                                        <option value="">Select Specialization</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Dermatology">Dermatology</option>
+                                        <option value="Oncology">Oncology</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="doctor-department">Department</label>
+                                    <select id="doctor-department" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="doctor-phone">Phone Number</label>
+                                <input type="tel" id="doctor-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="doctor-email">Email</label>
+                                <input type="email" id="doctor-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="doctor-address">Address</label>
+                                <textarea id="doctor-address" rows="3"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="doctor-consultation-fee">Consultation Fee</label>
+                                    <input type="number" id="doctor-consultation-fee" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="doctor-experience">Experience (years)</label>
+                                    <input type="number" id="doctor-experience" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="doctor-qualification">Qualification</label>
+                                <input type="text" id="doctor-qualification" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Available Days</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="doctor-days" value="Monday"> Monday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Tuesday"> Tuesday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Wednesday"> Wednesday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Thursday"> Thursday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Friday"> Friday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Saturday"> Saturday</label>
+                                    <label><input type="checkbox" name="doctor-days" value="Sunday"> Sunday</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="doctor-start-time">Start Time</label>
+                                    <input type="time" id="doctor-start-time" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="doctor-end-time">End Time</label>
+                                    <input type="time" id="doctor-end-time" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Doctor</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Appointments Section -->
+            <section id="appointments" class="content-section">
+                <div class="section-header">
+                    <h2>Appointments</h2>
+                    <button id="add-appointment-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Appointment
+                    </button>
+                </div>
+
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="appointment-search" placeholder="Search appointments...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="appointment-filter-status">
+                            <option value="all">All Status</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="completed">Completed</option>
+                            <option value="canceled">Canceled</option>
+                        </select>
+                        <input type="date" id="appointment-filter-date">
+                    </div>
+                </div>
+
+                <table id="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Department</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+
+                <!-- Add Appointment Modal -->
+                <div id="appointment-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>Add New Appointment</h3>
+                        <form id="appointment-form">
+                            <div class="form-group">
+                                <label for="appointment-patient">Patient</label>
+                                <select id="appointment-patient" required>
+                                    <option value="">Select Patient</option>
+                                    <!-- Filled by JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-doctor">Doctor</label>
+                                <select id="appointment-doctor" required>
+                                    <option value="">Select Doctor</option>
+                                    <!-- Filled by JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="appointment-date">Date</label>
+                                    <input type="date" id="appointment-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="appointment-time">Time</label>
+                                    <input type="time" id="appointment-time" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-reason">Reason</label>
+                                <textarea id="appointment-reason" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-status">Status</label>
+                                <select id="appointment-status" required>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="canceled">Canceled</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Appointment</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Departments Section -->
+            <section id="departments" class="content-section">
+                <div class="section-header">
+                    <h2>Departments</h2>
+                    <button id="add-department-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Department
+                    </button>
+                </div>
+
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="department-search" placeholder="Search departments...">
+                    </div>
+                </div>
+
+                <div class="departments-grid">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <!-- Add Department Modal -->
+                <div id="department-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>Add New Department</h3>
+                        <form id="department-form">
+                            <div class="form-group">
+                                <label for="department-name">Department Name</label>
+                                <input type="text" id="department-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-description">Description</label>
+                                <textarea id="department-description" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-head">Department Head</label>
+                                <select id="department-head">
+                                    <option value="">Select Department Head</option>
+                                    <!-- Filled by JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-phone">Contact Number</label>
+                                <input type="tel" id="department-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-email">Email</label>
+                                <input type="email" id="department-email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="department-location">Location (Floor/Room)</label>
+                                <input type="text" id="department-location" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Department</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <h2>Reports</h2>
+                
+                <div class="report-filters">
+                    <div class="filter-group">
+                        <label for="report-type">Report Type</label>
+                        <select id="report-type">
+                            <option value="patient">Patient Report</option>
+                            <option value="appointment">Appointment Report</option>
+                            <option value="financial">Financial Report</option>
+                            <option value="department">Department Report</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="report-period">Period</label>
+                        <select id="report-period">
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="filter-group custom-date-range" style="display: none;">
+                        <label for="report-start-date">From</label>
+                        <input type="date" id="report-start-date">
+                        <label for="report-end-date">To</label>
+                        <input type="date" id="report-end-date">
+                    </div>
+                    <button id="generate-report-btn" class="btn-primary">
+                        <i class="fas fa-file-alt"></i> Generate Report
+                    </button>
+                    <button id="export-report-btn" class="btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                <div class="report-results">
+                    <div id="patient-report" class="report-section">
+                        <h3>Patient Statistics</h3>
+                        <div class="report-stats">
+                            <div class="stat-item">
+                                <h4>Total Patients</h4>
+                                <p id="report-total-patients">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>New Patients</h4>
+                                <p id="report-new-patients">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Male/Female Ratio</h4>
+                                <p id="report-gender-ratio">0:0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Average Age</h4>
+                                <p id="report-avg-age">0</p>
+                            </div>
+                        </div>
+                        <canvas id="patient-report-chart"></canvas>
+                    </div>
+
+                    <div id="appointment-report" class="report-section">
+                        <h3>Appointment Statistics</h3>
+                        <div class="report-stats">
+                            <div class="stat-item">
+                                <h4>Total Appointments</h4>
+                                <p id="report-total-appointments">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Scheduled</h4>
+                                <p id="report-scheduled-appointments">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Completed</h4>
+                                <p id="report-completed-appointments">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Canceled</h4>
+                                <p id="report-canceled-appointments">0</p>
+                            </div>
+                        </div>
+                        <canvas id="appointment-report-chart"></canvas>
+                    </div>
+
+                    <div id="financial-report" class="report-section">
+                        <h3>Financial Statistics</h3>
+                        <div class="report-stats">
+                            <div class="stat-item">
+                                <h4>Total Revenue</h4>
+                                <p id="report-total-revenue">$0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Consultation Fees</h4>
+                                <p id="report-consultation-fees">$0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Procedures</h4>
+                                <p id="report-procedure-fees">$0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Other Income</h4>
+                                <p id="report-other-income">$0</p>
+                            </div>
+                        </div>
+                        <canvas id="financial-report-chart"></canvas>
+                    </div>
+
+                    <div id="department-report" class="report-section">
+                        <h3>Department Statistics</h3>
+                        <div class="report-stats">
+                            <div class="stat-item">
+                                <h4>Total Departments</h4>
+                                <p id="report-total-departments">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Busiest Department</h4>
+                                <p id="report-busiest-department">-</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Total Doctors</h4>
+                                <p id="report-total-doctors">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Total Staff</h4>
+                                <p id="report-total-staff">0</p>
+                            </div>
+                        </div>
+                        <canvas id="department-report-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
